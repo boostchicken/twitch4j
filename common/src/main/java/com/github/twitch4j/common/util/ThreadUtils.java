@@ -17,4 +17,13 @@ public class ThreadUtils {
         }
         return scheduledThreadPoolExecutor;
     }
+
+    /**
+     * If we made our own Thread Pool, shut it down.
+     */
+    public static void shutdown() {
+        if(scheduledThreadPoolExecutor != null) {
+            scheduledThreadPoolExecutor.shutdownNow();
+        }
+    }
 }

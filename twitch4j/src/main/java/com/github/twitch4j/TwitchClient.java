@@ -3,6 +3,7 @@ package com.github.twitch4j;
 import com.github.philippheuer.events4j.core.EventManager;
 import com.github.twitch4j.chat.TwitchChat;
 import com.github.twitch4j.common.annotation.Unofficial;
+import com.github.twitch4j.common.util.ThreadUtils;
 import com.github.twitch4j.graphql.TwitchGraphQL;
 import com.github.twitch4j.helix.TwitchHelix;
 import com.github.twitch4j.kraken.TwitchKraken;
@@ -222,6 +223,6 @@ public class TwitchClient implements AutoCloseable {
         if (this.twitchClientHelper != null) {
             twitchClientHelper.close();
         }
-        scheduledThreadPoolExecutor.shutdownNow();
+        ThreadUtils.shutdown();
     }
 }

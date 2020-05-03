@@ -227,18 +227,15 @@ public class TwitchClientHelper implements AutoCloseable {
 
         if (users.getUsers().size() == 1) {
             users.getUsers().forEach(user -> {
-                // add to list
-                if(listenForGoLive.stream().anyMatch(eventChannel -> eventChannel.getName().equalsIgnoreCase(channelName))) {
+                boolean added = listenForGoLive.add(new EventChannel(user.getId(), user.getLogin()));
+
+                if(!added) {
                     log.info("Channel {} already added for Stream Events", channelName);
-                } else {
-                    listenForGoLive.add(new EventChannel(user.getId(), user.getLogin()));
-
-                    // initialize cache
-                    if (channelInformation.getIfPresent(user.getId()) == null) {
-                        channelInformation.put(user.getId(), new ChannelCache(null, null, null, null));
-                    }
                 }
-
+                // initialize cache
+                if (channelInformation.getIfPresent(user.getId()) == null) {
+                    channelInformation.put(user.getId(), new ChannelCache(null, null, null, null));
+                }
             });
             startOrStopEventGenerationThread();
         } else {
@@ -281,17 +278,16 @@ public class TwitchClientHelper implements AutoCloseable {
 
         if (users.getUsers().size() == 1) {
             users.getUsers().forEach(user -> {
-                if(listenForFollow.stream().anyMatch(eventChannel -> eventChannel.getName().equalsIgnoreCase(channelName))) {
-                    log.info("Channel {} already added for Follow Events", channelName);
-                } else {
-                    // add to list
-                    listenForFollow.add(new EventChannel(user.getId(), user.getLogin()));
-
-                    // initialize cache
-                    if (channelInformation.getIfPresent(user.getId()) == null) {
-                        channelInformation.put(user.getId(), new ChannelCache(null, null, null, null));
-                    }
+                // add to list
+                boolean added = listenForFollow.add(new EventChannel(user.getId(), user.getLogin()));
+                if(!added) {
+                    log.info("Channel {} already added for Stream Events", channelName);
                 }
+                // initialize cache
+                if (channelInformation.getIfPresent(user.getId()) == null) {
+                    channelInformation.put(user.getId(), new ChannelCache(null, null, null, null));
+                }
+
             });
             // start thread if needed
             startOrStopEventGenerationThread();
